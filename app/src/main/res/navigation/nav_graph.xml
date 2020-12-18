@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeScreen">
+
+
+    <fragment
+        android:id="@+id/homeScreen"
+        android:name="cat.itb.m07_uf1_p18.fragments.HomeScreen"
+        android:label="HomeScreen" >
+        <action
+            android:id="@+id/action_homeScreen_to_loginScreen"
+            app:destination="@id/loginScreen" />
+        <action
+            android:id="@+id/action_homeScreen_to_registerScreen"
+            app:destination="@id/registerScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginScreen"
+        android:name="cat.itb.m07_uf1_p18.fragments.LoginScreen"
+        android:label="fragment_login_screen"
+        tools:layout="@layout/fragment_login_screen" >
+        <action
+            android:id="@+id/action_loginScreen_to_registerScreen"
+            app:destination="@id/registerScreen" />
+        <action
+            android:id="@+id/action_loginScreen_to_welcomeScreen"
+            app:destination="@id/welcomeScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerScreen"
+        android:name="cat.itb.m07_uf1_p18.fragments.RegisterScreen"
+        android:label="fragment_register_screen"
+        tools:layout="@layout/fragment_register_screen" >
+        <action
+            android:id="@+id/action_registerScreen_to_loginScreen"
+            app:destination="@id/loginScreen" />
+        <action
+            android:id="@+id/action_registerScreen_to_welcomeScreen"
+            app:destination="@id/welcomeScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeScreen"
+        android:name="cat.itb.m07_uf1_p18.fragments.WelcomeScreen"
+        android:label="fragment_welcome_screen"
+        tools:layout="@layout/fragment_welcome_screen" />
+</navigation>

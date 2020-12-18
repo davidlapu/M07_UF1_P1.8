@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">M07_UF1_P1.8</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
