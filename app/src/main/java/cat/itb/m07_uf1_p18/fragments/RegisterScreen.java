@@ -3,64 +3,130 @@ package cat.itb.m07_uf1_p18.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputEditText;
 
 import cat.itb.m07_uf1_p18.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RegisterScreen#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RegisterScreen extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextInputEditText editTextUsername, editTextPassword, editTextRepeatPassword,
+            editTextEmail, editTextName, editTextSurnames, editTextBirthDate;
+    private TextInputEditText[] inputEditTexts;
+    private MaterialCheckBox checkBoxTerms;
+    private MaterialButton buttonRegister, buttonLogin;
+    private AutoCompleteTextView textViewGender;
 
     public RegisterScreen() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterScreen.
-     */
-    // TODO: Rename and change types and number of parameters
     public static RegisterScreen newInstance(String param1, String param2) {
         RegisterScreen fragment = new RegisterScreen();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register_screen, container, false);
+        View v = inflater.inflate(R.layout.fragment_register_screen, container, false);
+
+        editTextUsername = v.findViewById(R.id.RegisterUserName);
+        editTextPassword = v.findViewById(R.id.registerPassword);
+        editTextRepeatPassword = v.findViewById(R.id.registerRepeatPassword);
+        editTextEmail = v.findViewById(R.id.registerEmail);
+        editTextName = v.findViewById(R.id.registerName);
+        editTextSurnames = v.findViewById(R.id.registerSurname);
+        editTextBirthDate = v.findViewById(R.id.registerbirth);
+        checkBoxTerms = v.findViewById(R.id.checkboxTerms);
+        buttonLogin = v.findViewById(R.id.registerButtonLogin);
+        buttonRegister = v.findViewById(R.id.registerButtonRegister);
+        textViewGender = v.findViewById(R.id.registerGender);
+
+        inputEditTexts = new TextInputEditText[]{editTextUsername, editTextPassword, editTextRepeatPassword,
+                editTextEmail, editTextName, editTextSurnames, editTextBirthDate};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, new String[]{"Male", "Female"});
+        textViewGender.setAdapter(adapter);
+
+        for (TextInputEditText e :
+                inputEditTexts) {
+            e.setOnFocusChangeListener(this::editTextListener);
+        }
+
+        editTextPassword.setOnFocusChangeListener(this::passwordListener);
+        buttonRegister.setOnClickListener(this::registerListener);
+        buttonLogin.setOnClickListener(this::loginListener);
+
+        return v;
     }
+
+    private void loginListener(View view) {
+        Navigation.findNavController(view).navigate(R.id.action_registerScreen_to_loginScreen);
+    }
+
+    private void registerListener(View view) {
+        boolean allGood = true;
+
+        for (TextInputEditText e :
+                inputEditTexts) {
+            if (e.getText().toString().isEmpty()) {
+                allGood = false;
+                e.setError(getString(R.string.required_field));
+            }
+        }
+
+        if (!checkBoxTerms.isChecked()) {
+            allGood = false;
+        }
+
+        if (editTextPassword.getText().toString().length() < 8 || editTextRepeatPassword.getText().toString().length() < 8) {
+            allGood = false;
+        }
+
+        if (allGood) {
+            Toast.makeText(getContext(), R.string.created, Toast.LENGTH_LONG).show();
+            Navigation.findNavController(view).navigate(R.id.action_registerScreen_to_welcomeScreen);
+        } else {
+            Toast.makeText(getContext(), R.string.required_field, Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void passwordListener(View view, boolean b) {
+        TextInputEditText editText = (TextInputEditText) view;
+
+        if (editText.getText().toString().length() < 8) {
+            editText.setError(getString(R.string.must));
+        } else {
+            editText.setError(null);
+        }
+    }
+
+    private void editTextListener(View view, boolean b) {
+        TextInputEditText editText = (TextInputEditText) view;
+
+        if (editText.getText().toString().isEmpty()) {
+            editText.setError(getString(R.string.required_field));
+        } else {
+            editText.setError(null);
+        }
+    }
+
 }

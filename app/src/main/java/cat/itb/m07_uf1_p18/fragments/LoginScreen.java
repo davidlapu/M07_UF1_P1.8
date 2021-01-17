@@ -3,64 +3,78 @@ package cat.itb.m07_uf1_p18.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import cat.itb.m07_uf1_p18.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LoginScreen#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LoginScreen extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    TextInputEditText editTextName, editTextPassword;
+    MaterialButton loginButton, registerButton;
 
     public LoginScreen() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LoginScreen.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LoginScreen newInstance(String param1, String param2) {
+    public static LoginScreen newInstance() {
         LoginScreen fragment = new LoginScreen();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_screen, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_login_screen, container, false);
+
+        editTextName = v.findViewById(R.id.editTextUserName);
+        editTextPassword = v.findViewById(R.id.editTextPassword);
+        loginButton = v.findViewById(R.id.loginButtonLogin);
+        registerButton = v.findViewById(R.id.loginButtonRegister);
+
+        loginButton.setOnClickListener(this::loginClicked);
+        registerButton.setOnClickListener(this::registerClicked);
+
+        return v;
     }
+
+    private void registerClicked(View view) {
+        Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_registerScreen);
+    }
+
+    private void loginClicked(View view) {
+        boolean allGood = true;
+        if (editTextName.getText().toString().isEmpty()) {
+            editTextName.setError(getString(R.string.required_field));
+            allGood = false;
+        } else {
+            editTextName.setError(null);
+        }
+
+        if (editTextPassword.getText().toString().length() < 8) {
+            editTextPassword.setError(getString(R.string.must));
+            allGood = false;
+        } else {
+            editTextPassword.setError(null);
+        }
+
+        if (allGood) {
+            Navigation.findNavController(view).navigate(R.id.action_loginScreen_to_welcomeScreen);
+        }
+
+    }
+
+
 }
